@@ -10,15 +10,15 @@ from app.dependencies.auth import get_current_user
 from app.services.campaign import (
     get_campaign,
     get_campaigns_for_user,
-    create_campaign,
-    update_campaign,
-    delete_campaign,
+    create_campaign as create_campaign_svc,   
+    update_campaign as update_campaign_svc,
+    delete_campaign as delete_campaign_svc,
 )
 from app.services.campaign_member import (
     get_member,
     get_members,
-    add_member,
-    remove_member,
+    add_member as add_member_svc,     
+    remove_member as remove_member_svc,
     count_owners,
 )
 
@@ -32,7 +32,7 @@ def list_campaigns(search: Optional[str] = Query(None, description="Tìm theo t�
 
 @router.post("/", response_model=CampaignOut, status_code=status.HTTP_201_CREATED)
 def create_campaign(campaign_in: CampaignCreate,db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
-    return create_campaign(
+    return create_campaign_svc(
         db,
         name=campaign_in.name,
         description=campaign_in.description,
@@ -63,7 +63,7 @@ def update_campaign(campaign_id: int,campaign_in: CampaignUpdate,db: Session = D
     if campaign.owner_id != current_user.id:
         raise HTTPException(status_code=403, detail="Chỉ owner mới được sửa chiến dịch")
 
-    return update_campaign(db, campaign, campaign_in)
+    return update_campaign_svc(db, campaign, campaign_in)
 
 
 @router.delete("/{campaign_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -75,7 +75,7 @@ def delete_campaign(campaign_id: int,db: Session = Depends(get_db),current_user:
     if campaign.owner_id != current_user.id:
         raise HTTPException(status_code=403, detail="Chỉ owner mới được xóa chiến dịch")
 
-    delete_campaign(db, campaign)
+    delete_campaign_svc(db, campaign)
     return None
 
 
@@ -117,7 +117,7 @@ def add_member(campaign_id: int,user_id: int,db: Session = Depends(get_db),curre
     if existing:
         raise HTTPException(status_code=400, detail="User đã là thành viên của chiến dịch")
 
-    add_member(db, campaign_id, user_id)
+    add_member_svc(db, campaign_id, user_id)
     return {"message": "Thêm thành viên thành công"}
 
 
@@ -139,5 +139,5 @@ def remove_member(campaign_id: int,user_id: int,db: Session = Depends(get_db),cu
         if owner_count <= 1:
             raise HTTPException(status_code=400, detail="Không thể xóa owner cuối cùng")
 
-    remove_member(db, member)
+    remove_member_svc(db, member)
     return None

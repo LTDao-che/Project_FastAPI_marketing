@@ -20,8 +20,8 @@ class Campaign(Base):
     created_at = Column(DateTime, default=lambda: datetime.now(), nullable=False)
 
     owner = relationship("User", back_populates="owned_campaigns")
-    members = relationship("CampaignMember", back_populates="campaign")
-    tasks = relationship("CampaignTask", back_populates="campaign")
+    members = relationship("CampaignMember", back_populates="campaign",cascade="all")
+    tasks = relationship("CampaignTask", back_populates="campaign",cascade="all")
 
 
 class CampaignMember(Base):
