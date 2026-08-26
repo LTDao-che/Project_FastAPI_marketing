@@ -6,7 +6,7 @@ from app.models.campaign_task import CampaignTask
 from app.models.user import User
 from fastapi.exceptions import RequestValidationError
 from app.core.exceptions import http_exception_handler, validation_exception_handler,generic_exception_handler
-from app.routers import auth, users, campaign
+from app.routers import auth, users, campaign, campaign_task
 
 Base.metadata.create_all(engine)
 
@@ -27,3 +27,4 @@ def start():
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(campaign.router)
+app.include_router(campaign_task.router)
