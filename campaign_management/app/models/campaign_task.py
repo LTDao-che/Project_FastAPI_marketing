@@ -25,10 +25,12 @@ class CampaignTask(Base):
     title = Column(String(50), nullable=False)
     description = Column(Text, nullable=True)
     assignee_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    created_by = Column(Integer, ForeignKey("users.id"), nullable=False)
     status = Column(Enum(TaskStatus), default=TaskStatus.TODO, nullable=False)
     priority = Column(Enum(TaskPriority), default=TaskPriority.MEDIUM, nullable=False)
     due_date = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=lambda: datetime.now(), nullable=False)
 
     campaign = relationship("Campaign", back_populates="tasks")
-    assignee = relationship("User", back_populates="assigned_tasks")
+    assignee = relationship("User", foreign_keys=[assignee_id], back_populates="assigned_tasks")
+    creator  = relationship("User", foreign_keys=[created_by], back_populates="created_tasks")

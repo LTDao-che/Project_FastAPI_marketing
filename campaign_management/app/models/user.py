@@ -23,4 +23,5 @@ class User(Base):
 
     owned_campaigns = relationship("Campaign", back_populates="owner")
     campaign_memberships = relationship("CampaignMember", back_populates="user")
-    assigned_tasks = relationship("CampaignTask", back_populates="assignee")
+    assigned_tasks = relationship("CampaignTask", foreign_keys="CampaignTask.assignee_id", back_populates="assignee")
+    created_tasks = relationship("CampaignTask", foreign_keys="CampaignTask.created_by", back_populates="creator")
