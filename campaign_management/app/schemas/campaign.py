@@ -23,3 +23,4 @@ class CampaignOut(CampaignBase):
     id: int
     owner_id: int
     created_at: datetime
+    total_members: int

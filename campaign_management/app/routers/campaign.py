@@ -20,6 +20,7 @@ from app.services.campaign_member import (
     add_member as add_member_svc,     
     remove_member as remove_member_svc,
     count_owners,
+    count_member
 )
 
 router = APIRouter(prefix="/campaigns", tags=["Campaigns"])
@@ -50,7 +51,7 @@ def get_campaign_detail(campaign_id: int,db: Session = Depends(get_db),current_u
         member = get_member(db, campaign_id, current_user.id)
         if not member:
             raise HTTPException(status_code=403, detail="Bạn không có quyền xem chiến dịch này")
-
+    campaign.total_members = count_member
     return campaign
 
 
