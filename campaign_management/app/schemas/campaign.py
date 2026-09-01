@@ -24,3 +24,5 @@ class CampaignOut(CampaignBase):
     owner_id: int
     created_at: datetime
     total_members: int
+    is_deleted: bool = False  
+    deleted_at: datetime | None = None

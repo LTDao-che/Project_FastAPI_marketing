@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Enum, PrimaryKeyConstraint
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Enum, PrimaryKeyConstraint, Boolean
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import enum
@@ -18,6 +18,9 @@ class Campaign(Base):
     description = Column(Text, nullable=True)
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(), nullable=False)
+
+    is_deleted = Column(Boolean, default=False, nullable=False)
+    deleted_at = Column(DateTime, nullable=True)
 
     owner = relationship("User", back_populates="owned_campaigns")
     members = relationship("CampaignMember", back_populates="campaign",cascade="all")
