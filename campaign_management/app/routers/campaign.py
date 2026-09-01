@@ -52,7 +52,6 @@ def get_campaign_detail(campaign_id: int, db: Session = Depends(get_db), current
         member = get_member(db, campaign_id, current_user.id)
         if not member:
             raise HTTPException(status_code=403, detail="Bạn không có quyền xem chiến dịch này")
-    campaign.total_members = count_member
     return campaign
 
 
@@ -83,13 +82,15 @@ def delete_campaign(campaign_id: int, db: Session = Depends(get_db), current_use
 
 @router.post("/{campaign_id}/restore", response_model=CampaignOut)
 def restore_campaign(campaign_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    campaign = restore_campaign_svc(db, campaign_id)
-    if not campaign:
+    campaign = get_campaign(db, campaign_id)             
+    if not campaign or not campaign.is_deleted:
         raise HTTPException(status_code=404, detail="Không tìm thấy chiến dịch đã xóa")
     
     if campaign.owner_id != current_user.id:
-        raise HTTPException(status_code=403, detail="Chỉ owner mới được khôi phục chiến dịch")
+        raise HTTPException(status_code=403, detail="Chỉ owner mới được khôi phục")
     
+    campaign = restore_campaign_svc(db, campaign)       
+    campaign.total_members = count_member(db, campaign_id)
     return campaign
 
 

@@ -55,11 +55,7 @@ def delete_campaign(db: Session, campaign: Campaign):
     db.refresh(campaign)
     return campaign
 
-def restore_campaign(db: Session, campaign_id: int):
-    campaign = db.query(Campaign).filter(Campaign.id == campaign_id,Campaign.is_deleted == True).first()
-    if not campaign:
-        return None
-    
+def restore_campaign(db: Session, campaign: Campaign):
     campaign.is_deleted = False
     campaign.deleted_at = None
     db.commit()

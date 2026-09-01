@@ -24,9 +24,9 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
 def decode_access_token(token: str) -> dict | None:
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        if payload.get("type") != "refresh":
+        if payload.get("type") != "access":
             return None
-        return payload.get("sub")
+        return payload   
     except JWTError:
         return None
 

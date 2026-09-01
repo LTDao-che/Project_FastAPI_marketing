@@ -3,11 +3,6 @@ from datetime import datetime
 from app.models.campaign_task import TaskStatus, TaskPriority
 from typing import List
 
-class CampaignTaskListOut(BaseModel):
-    data: List[CampaignTaskOut]
-    total: int
-    limit: int
-    offset: int
 
 class CampaignTaskBase(BaseModel):
     title: str
@@ -37,3 +32,9 @@ class CampaignTaskOut(CampaignTaskBase):
     campaign_id: int
     status: TaskStatus
     created_at: datetime
+    
+class CampaignTaskListOut(BaseModel):
+    data: List[CampaignTaskOut]
+    total: int
+    limit: int
+    offset: int
