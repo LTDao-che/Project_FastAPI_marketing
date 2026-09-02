@@ -21,7 +21,6 @@ from app.services.campaign_member import (
     add_member as add_member_svc,     
     remove_member as remove_member_svc,
     count_owners,
-    count_member
 )
 from app.services.user import get_user_by_id
 
@@ -91,7 +90,6 @@ def restore_campaign(campaign_id: int, db: Session = Depends(get_db), current_us
         raise HTTPException(status_code=403, detail="Chỉ owner mới được khôi phục")
     
     campaign = restore_campaign_svc(db, campaign)       
-    campaign.total_members = count_member(db, campaign_id)
     return campaign
 
 
@@ -132,6 +130,11 @@ def add_member(campaign_id: int, user_id: int, db: Session = Depends(get_db), cu
     user_to_add = get_user_by_id(db, user_id)
     if not user_to_add:
         raise HTTPException(status_code=404, detail="Không tìm thấy người dùng")
+
+    existing = get_member(db, campaign_id, user_id)
+    if existing:
+        raise HTTPException(status_code=400, detail="User đã là thành viên của chiến dịch")
+
     add_member_svc(db, campaign_id, user_id)
     return {"message": "Thêm thành viên thành công"}
 

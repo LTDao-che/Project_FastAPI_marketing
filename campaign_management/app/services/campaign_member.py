@@ -9,8 +9,6 @@ def get_member(db: Session, campaign_id: int, user_id: int):
 def get_members(db: Session, campaign_id: int):
     return db.query(CampaignMember).options(joinedload(CampaignMember.user)).filter(CampaignMember.campaign_id == campaign_id).all()
 
-def count_member(db: Session, campaign_id: int) -> int:
-    return db.query(CampaignMember).filter(CampaignMember.campaign_id == campaign_id).count()
 
 def add_member(db: Session, campaign_id: int, user_id: int, role: CampaignMemberRole = CampaignMemberRole.MEMBER):
     member = CampaignMember(
